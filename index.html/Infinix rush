@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinix Rush - Abuja Creator</title>
+<style>
+body { margin:0; background:#0a2a1a; color:white; font-family:Arial; text-align:center; overflow:hidden; }
+#game { width:100vw; height:80vh; background:#00d084; position:relative; overflow:hidden; }
+#player { position:absolute; bottom:10px; left:45%; font-size:50px; }
+.item { position:absolute; font-size:40px; }
+#score { font-size:22px; padding:10px; }
+button { padding:12px 25px; font-size:18px; background:#fff; border:none; border-radius:20px; }
+</style>
+</head>
+<body>
+<h2>📱 INFINIX RUSH</h2>
+<div id="score">Score: 0 | Lives: 3</div>
+<div id="game"><div id="player">📱</div></div>
+<br><button onclick="startGame()">START GAME</button>
+<p>Move your finger / mouse to catch 📱, avoid 💣</p>
+
+<script>
+let score=0, lives=3, playing=false, playerX=45;
+let game=document.getElementById('game');
+let player=document.getElementById('player');
+
+game.addEventListener('touchmove', e=>{ move(e.touches[0].clientX) });
+game.addEventListener('mousemove', e=>{ move(e.clientX) });
+function move(x){ let r=game.getBoundingClientRect(); playerX=((x-r.left)/r.width*100); player.style.left=playerX+'%'; }
+
+function startGame(){
+  score=0; lives=3; playing=true;
+  document.getElementById('score').innerText='Score: 0 | Lives: 3';
+  spawn();
+}
+function spawn(){
+  if(!playing) return;
+  let item=document.createElement('div');
+  item.className='item';
+  let isBomb=Math.random()<0.25;
+  item.innerText=isBomb?'💣':'📱';
+  item.style.left=Math.random()*85+'%';
+  item.style.top='0px';
+  game.appendChild(item);
+  let y=0;
+  let fall=setInterval(()=>{
+    y+=4; item.style.top=y+'px';
+    let itemX=parseFloat(item.style.left);
+    if(y>game.clientHeight-80 && Math.abs(itemX-playerX)<8){
+      if(isBomb){ lives--; alert('Bomb! Lives left: '+lives); if(lives<=0){ playing=false; alert('Game Over! Score: '+score); } }
+      else{ score+=10; document.getElementById('score').innerText='Score: '+score+' | Lives: '+lives; }
+      clearInterval(fall); item.remove();
+    }
+    if(y>game.clientHeight){ clearInterval(fall); item.remove(); }
+  },30);
+  setTimeout(spawn, 800);
+}
+</script>
+</body>
+</html>
