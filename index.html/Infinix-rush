@@ -1,0 +1,83 @@
+https://github.com/Gre<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFINIX RUSH - Great-bit203</title>
+<style>
+body { margin:0; background:#0a2a1a; color:white; font-family:Arial; text-align:center; overflow:hidden; }
+#game { width:100vw; height:60vh; background:#00d084; position:relative; overflow:hidden; }
+#player { position:absolute; bottom:10px; left:45%; font-size:50px; }
+.item { position:absolute; font-size:40px; }
+#score { font-size:22px; padding:8px; }
+button { padding:12px 25px; font-size:18px; background:#fff; border:none; border-radius:20px; margin:5px; }
+.ad-box { background:#fff; color:#000; padding:10px; margin:10px; border-radius:10px; font-size:14px; }
+.donate { background:#ffcc00 !important; color:#000; font-weight:bold; }
+.leader { background:#111; padding:10px; margin:10px; border-radius:10px; }
+</style>
+</head>
+<body>
+<h2>📱 INFINIX RUSH</h2>
+<p style="font-size:13px;">By Great-bit203 | Abuja Creator</p>
+<div id="score">Score: 0 | Lives: 3 | Best: 0</div>
+<div id="game"><div id="player">📱</div></div>
+<br><button onclick="startGame()">▶ START GAME</button>
+
+<div class="ad-box">
+📢 ADVERTISE HERE - Contact @Great-bit203<br>
+<small>Your business logo here - ₦50k/month</small>
+</div>
+
+<button class="donate" onclick="copyOpay()">💰 SUPPORT ME - Send ₦500 to Opay: 8065863879<br><small>Tap to Copy Number</small></button>
+<p id="copied" style="color:#ffcc00;"></p>
+
+<a href="https://tiktok.com/@Great-bit203" target="_blank"><button>Follow Me On TikTok</button></a>
+
+<div class="leader">
+🏆 TOP PLAYERS<br>
+<span id="board">No scores yet - Be the first!</span>
+</div>
+
+<script>
+function copyOpay(){
+  navigator.clipboard.writeText("8065863879");
+  document.getElementById('copied').innerText = "✅ Copied! Opay: 8065863879 - Now go and send ₦500";
+  alert("Opay Number Copied: 8065863879");
+}
+let score=0, lives=3, playing=false, playerX=45;
+let best = localStorage.getItem('best') || 0;
+document.getElementById('score').innerText='Score: 0 | Lives: 3 | Best: '+best;
+let game=document.getElementById('game');
+let player=document.getElementById('player');
+let scores = JSON.parse(localStorage.getItem('scores')||'[]');
+updateBoard();
+function beep(f){ try{ let a=new (window.AudioContext||window.webkitAudioContext)(); let o=a.createOscillator(); o.frequency.value=f; o.connect(a.destination); o.start(); o.stop(a.currentTime+0.1);}catch(e){} }
+game.addEventListener('touchmove', e=>{ move(e.touches[0].clientX) });
+game.addEventListener('mousemove', e=>{ move(e.clientX) });
+function move(x){ let r=game.getBoundingClientRect(); playerX=((x-r.left)/r.width*100); player.style.left=playerX+'%'; }
+function startGame(){ score=0; lives=3; playing=true; document.getElementById('score').innerText='Score: 0 | Lives: 3 | Best: '+best; spawn(); }
+function updateBoard(){ if(scores.length==0) return; scores.sort((a,b)=>b-a); document.getElementById('board').innerHTML = scores.slice(0,5).map((s,i)=> (i+1)+'. '+s+' pts').join('<br>'); }
+function spawn(){
+  if(!playing) return;
+  let item=document.createElement('div');
+  item.className='item';
+  let isBomb=Math.random()<0.25;
+  item.innerText=isBomb?'💣':'📱';
+  item.style.left=Math.random()*85+'%';
+  item.style.top='0px';
+  game.appendChild(item);
+  let y=0;
+  let fall=setInterval(()=>{
+    y+=4; item.style.top=y+'px';
+    let itemX=parseFloat(item.style.left);
+    if(y>game.clientHeight-80 && Math.abs(itemX-playerX)<8){
+      if(isBomb){ lives--; beep(150); alert('Bomb! Lives left: '+lives); if(lives<=0){ playing=false; if(score>best){best=score; localStorage.setItem('best',best);} scores.push(score); localStorage.setItem('scores',JSON.stringify(scores)); updateBoard(); alert('Game Over! Score: '+score+' | Best: '+best); } }
+      else{ score+=10; beep(600); document.getElementById('score').innerText='Score: '+score+' | Lives: '+lives+' | Best: '+best; }
+      clearInterval(fall); item.remove();
+    }
+    if(y>game.clientHeight){ clearInterval(fall); item.remove(); }
+  },30);
+  setTimeout(spawn, 800);
+}
+</script>
+</body>
+</html>at-bit203/infinix-rush/new/main/index.html
