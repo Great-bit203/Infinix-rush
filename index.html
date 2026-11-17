@@ -154,7 +154,7 @@ function die(){
 }
 
 startBtn.addEventListener('click',start);
-document.getElementById('gameBox').addEventListener('touchstart',e=>{e.preventDefault(); initAudio(); if(playing) jump(); },{passive:false});
+document.getElementById('gameBox').addEventListener('touchstart',e=>{ if(e.target.closest('button')) return; e.preventDefault(); initAudio(); if(playing) jump(); },{passive:false});
 document.getElementById('gameBox').addEventListener('mousedown',()=>{initAudio(); if(playing) jump();});
 document.addEventListener('keydown',e=>{ if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault(); initAudio(); if(playing) jump(); }});
 </script>
